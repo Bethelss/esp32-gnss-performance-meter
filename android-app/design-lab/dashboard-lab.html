@@ -1,0 +1,529 @@
+<style>
+  #gnss-dashboard-lab {
+    --gnss-accent: #ff9f1c;
+    --gnss-secondary: #27c2e8;
+    --gnss-positive: #58e391;
+    --gnss-danger: #ff5f55;
+    --gnss-bg: #090b0d;
+    --gnss-surface: #15191d;
+    --gnss-surface-raised: #20252a;
+    --gnss-line: #424950;
+    --gnss-text: #f4f7f9;
+    --gnss-muted: #919aa3;
+    --gnss-control-bg: #15191d;
+    --gnss-control-text: #f4f7f9;
+    --gnss-control-muted: #a0a8b0;
+    --gnss-control-border: #3f474f;
+    --gnss-control-input: #303840;
+    --gnss-radius: 24px;
+    --gnss-gap: 14px;
+    --gnss-display-font: "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
+    --gnss-ui-font: Inter, "Segoe UI", Arial, sans-serif;
+    color: var(--gnss-text);
+    font-family: var(--gnss-ui-font);
+    width: 100%;
+    min-width: 0;
+  }
+  #gnss-dashboard-lab * { box-sizing: border-box; }
+  #gnss-dashboard-lab button,
+  #gnss-dashboard-lab select,
+  #gnss-dashboard-lab input { font: inherit; }
+  #gnss-dashboard-lab .gnss-lab-layout {
+    display: grid;
+    grid-template-columns: minmax(320px, 430px) minmax(270px, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+  #gnss-dashboard-lab .gnss-phone-stage {
+    display: grid;
+    justify-items: center;
+    min-width: 0;
+  }
+  #gnss-dashboard-lab .gnss-phone {
+    width: min(100%, 390px);
+    aspect-ratio: 390 / 844;
+    overflow: hidden;
+    position: relative;
+    border-radius: 34px;
+    background:
+      radial-gradient(circle at 78% 8%, color-mix(in srgb, var(--gnss-accent) 13%, transparent), transparent 27%),
+      linear-gradient(155deg, #11161a, var(--gnss-bg) 42%);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .42), inset 0 0 0 1px #3c444b;
+    transition: width .22s ease, aspect-ratio .22s ease;
+  }
+  #gnss-dashboard-lab .gnss-phone[data-size="360"] { width: min(100%, 360px); aspect-ratio: 360 / 800; }
+  #gnss-dashboard-lab .gnss-phone[data-size="430"] { width: min(100%, 430px); aspect-ratio: 430 / 932; }
+  #gnss-dashboard-lab .gnss-screen {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+  #gnss-dashboard-lab .gnss-appbar {
+    padding: 16px 20px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  #gnss-dashboard-lab .gnss-wordmark { font-weight: 800; letter-spacing: .11em; font-size: 12px; }
+  #gnss-dashboard-lab .gnss-source {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    color: var(--gnss-positive);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+  }
+  #gnss-dashboard-lab .gnss-source::before { content: ""; width: 6px; height: 6px; background: currentColor; border-radius: 50%; box-shadow: 0 0 9px currentColor; }
+  #gnss-dashboard-lab .gnss-content {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gnss-gap);
+    padding: 4px 16px 12px;
+  }
+  #gnss-dashboard-lab .gnss-speed-panel {
+    padding: 15px 18px 13px;
+    border-radius: var(--gnss-radius);
+    background: linear-gradient(145deg, rgba(37,43,48,.96), rgba(19,23,27,.96));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 10px 28px rgba(0,0,0,.22);
+  }
+  #gnss-dashboard-lab .gnss-speed-meta,
+  #gnss-dashboard-lab .gnss-speed-row,
+  #gnss-dashboard-lab .gnss-status-row { display: flex; align-items: center; }
+  #gnss-dashboard-lab .gnss-speed-meta { justify-content: space-between; color: var(--gnss-muted); font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+  #gnss-dashboard-lab .gnss-speed-row { justify-content: center; align-items: end; margin: -3px 0 4px; }
+  #gnss-dashboard-lab .gnss-speed-value {
+    font-family: var(--gnss-display-font);
+    font-size: clamp(56px, 18vw, 78px);
+    line-height: .95;
+    font-weight: 800;
+    font-stretch: condensed;
+    letter-spacing: -.055em;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 28px color-mix(in srgb, var(--gnss-secondary) 18%, transparent);
+  }
+  #gnss-dashboard-lab .gnss-speed-unit { color: var(--gnss-muted); font-weight: 700; font-size: 12px; padding: 0 0 7px 8px; }
+  #gnss-dashboard-lab .gnss-status-row { gap: 6px; }
+  #gnss-dashboard-lab .gnss-status {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 6px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, currentColor 12%, transparent);
+    color: var(--gnss-positive);
+    white-space: nowrap;
+    text-align: center;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .04em;
+  }
+  #gnss-dashboard-lab .gnss-status.sv { color: var(--gnss-secondary); flex: .65; }
+  #gnss-dashboard-lab .gnss-status.stream { color: var(--gnss-secondary); }
+  #gnss-dashboard-lab .gnss-g-panel {
+    flex: 1 1 auto;
+    min-height: 250px;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--gnss-radius);
+    background: linear-gradient(160deg, rgba(34,39,44,.98), rgba(16,19,22,.98));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 12px 28px rgba(0,0,0,.22);
+    touch-action: none;
+  }
+  #gnss-dashboard-lab .gnss-g-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto auto 7%;
+    width: 86%;
+    height: 3px;
+    border-radius: 0 0 4px 4px;
+    background: var(--gnss-accent);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--gnss-accent) 50%, transparent);
+  }
+  #gnss-dashboard-lab .gnss-g-head {
+    position: absolute;
+    z-index: 2;
+    inset: 12px 14px auto;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .09em;
+    pointer-events: none;
+  }
+  #gnss-dashboard-lab .gnss-g-total { font-variant-numeric: tabular-nums; letter-spacing: 0; }
+  #gnss-dashboard-lab .gnss-g-canvas { width: 100%; height: 100%; display: block; cursor: crosshair; }
+  #gnss-dashboard-lab .gnss-g-value {
+    position: absolute;
+    z-index: 2;
+    color: var(--gnss-secondary);
+    font-family: var(--gnss-display-font);
+    font-size: 11px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
+  #gnss-dashboard-lab .gnss-g-lateral { right: 12px; top: 51%; transform: translateY(-50%); }
+  #gnss-dashboard-lab .gnss-g-longitudinal { left: 50%; bottom: 8px; transform: translateX(-50%); }
+  #gnss-dashboard-lab .gnss-gap-overlay {
+    display: none;
+    position: absolute;
+    z-index: 3;
+    inset: 42% 18% auto;
+    padding: 9px;
+    text-align: center;
+    border-radius: 10px;
+    background: rgba(255,95,85,.14);
+    color: var(--gnss-danger);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .12em;
+  }
+  #gnss-dashboard-lab .gnss-record {
+    width: 100%;
+    min-height: 42px;
+    border: 0;
+    border-radius: 13px;
+    background: var(--gnss-accent);
+    color: #1c1000;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--gnss-accent) 20%, transparent);
+  }
+  #gnss-dashboard-lab .gnss-record[data-recording="true"] { background: var(--gnss-danger); color: #fff; }
+  #gnss-dashboard-lab .gnss-bottom-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 10px 12px 13px;
+    border-top: 1px solid rgba(255,255,255,.07);
+    background: rgba(19,23,27,.96);
+  }
+  #gnss-dashboard-lab .gnss-bottom-item { text-align: center; color: var(--gnss-muted); font-size: 9px; font-weight: 700; }
+  #gnss-dashboard-lab .gnss-bottom-item:first-child { color: var(--gnss-accent); }
+  #gnss-dashboard-lab .gnss-bottom-icon { display: block; font-size: 15px; line-height: 1; margin-bottom: 4px; }
+  #gnss-dashboard-lab .gnss-controls { display: grid; gap: 14px; min-width: 0; }
+  #gnss-dashboard-lab .gnss-control-group {
+    padding: 14px;
+    border-radius: 18px;
+    background: var(--gnss-control-bg);
+    color: var(--gnss-control-text);
+    border: 1px solid var(--gnss-control-border);
+  }
+  #gnss-dashboard-lab .gnss-control-title { margin: 0 0 11px; font-size: 13px; font-weight: 700; }
+  #gnss-dashboard-lab .gnss-toolbar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  #gnss-dashboard-lab label { display: grid; gap: 5px; color: var(--gnss-control-muted); font-size: 11px; }
+  #gnss-dashboard-lab select { width: 100%; min-height: 38px; padding: 6px 8px; border: 1px solid var(--gnss-control-input); border-radius: 9px; color: var(--gnss-control-text); background: var(--gnss-bg); }
+  #gnss-dashboard-lab .gnss-sliders { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+  #gnss-dashboard-lab .gnss-slider-head { display: flex; justify-content: space-between; gap: 8px; }
+  #gnss-dashboard-lab .gnss-slider-value { color: var(--gnss-control-text); font-variant-numeric: tabular-nums; font-weight: 700; }
+  #gnss-dashboard-lab input[type="range"] { width: 100%; accent-color: var(--gnss-accent); }
+  #gnss-dashboard-lab .gnss-scenarios { display: flex; flex-wrap: wrap; gap: 7px; }
+  #gnss-dashboard-lab .gnss-scenario {
+    min-height: 34px;
+    padding: 6px 10px;
+    border: 1px solid var(--gnss-control-border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--gnss-control-text);
+    cursor: pointer;
+    font-size: 11px;
+  }
+  #gnss-dashboard-lab .gnss-scenario[aria-pressed="true"] { border-color: var(--gnss-accent); color: var(--gnss-accent); background: color-mix(in srgb, var(--gnss-accent) 10%, transparent); }
+  #gnss-dashboard-lab .gnss-hint { margin: 10px 0 0; color: var(--gnss-control-muted); font-size: 11px; }
+  #gnss-dashboard-lab[data-density="compact"] { --gnss-gap: 9px; --gnss-radius: 17px; }
+  #gnss-dashboard-lab[data-font="technical"] { --gnss-display-font: Consolas, "Courier New", monospace; --gnss-ui-font: "Segoe UI", Arial, sans-serif; }
+  #gnss-dashboard-lab[data-font="wide"] { --gnss-display-font: Impact, Haettenschweiler, sans-serif; --gnss-ui-font: Arial, sans-serif; }
+  #gnss-dashboard-lab[data-palette="cyan"] { --gnss-accent: #1fc7e9; --gnss-secondary: #f6a425; }
+  #gnss-dashboard-lab[data-palette="red"] { --gnss-accent: #ff5d48; --gnss-secondary: #f5c84b; }
+  @media (max-width: 760px) {
+    #gnss-dashboard-lab .gnss-lab-layout { grid-template-columns: 1fr; }
+    #gnss-dashboard-lab .gnss-controls { width: min(100%, 430px); justify-self: center; }
+  }
+  @media (max-width: 390px) {
+    #gnss-dashboard-lab .gnss-toolbar,
+    #gnss-dashboard-lab .gnss-sliders { grid-template-columns: 1fr; }
+    #gnss-dashboard-lab .gnss-phone { border-radius: 26px; }
+  }
+</style>
+
+<div id="gnss-dashboard-lab" data-density="comfortable" data-font="condensed" data-palette="orange">
+  <div class="gnss-lab-layout">
+    <section class="gnss-phone-stage" aria-label="Предпросмотр главного экрана">
+      <div class="gnss-phone" data-size="390">
+        <div class="gnss-screen">
+          <header class="gnss-appbar">
+            <div class="gnss-wordmark">GNSS METER</div>
+            <div class="gnss-source">СИМУЛЯЦИЯ</div>
+          </header>
+          <main class="gnss-content">
+            <section class="gnss-speed-panel" aria-label="Скорость и GNSS">
+              <div class="gnss-speed-meta"><span>LIVE TELEMETRY</span><span>50 HZ</span></div>
+              <div class="gnss-speed-row"><span class="gnss-speed-value">72.4</span><span class="gnss-speed-unit">km/h</span></div>
+              <div class="gnss-status-row">
+                <span class="gnss-status gnss-status-gnss">GNSS READY</span>
+                <span class="gnss-status sv">SV 18</span>
+                <span class="gnss-status stream">ПОТОК OK</span>
+              </div>
+            </section>
+            <section class="gnss-g-panel" aria-label="Интерактивный круг перегрузок">
+              <div class="gnss-g-head"><span>G-FORCE</span><span class="gnss-g-total">0.00 g</span></div>
+              <canvas class="gnss-g-canvas" aria-label="Перетащите точку для изменения перегрузки"></canvas>
+              <span class="gnss-g-value gnss-g-lateral">+0.00 g</span>
+              <span class="gnss-g-value gnss-g-longitudinal">+0.00 g</span>
+              <div class="gnss-gap-overlay">НЕТ ДАННЫХ</div>
+            </section>
+            <button class="gnss-record" type="button" data-recording="false">НАЧАТЬ ЗАПИСЬ</button>
+          </main>
+          <nav class="gnss-bottom-nav" aria-label="Навигация приложения">
+            <span class="gnss-bottom-item"><span class="gnss-bottom-icon">●</span>Прибор</span>
+            <span class="gnss-bottom-item"><span class="gnss-bottom-icon">▥</span>Поездки</span>
+            <span class="gnss-bottom-item"><span class="gnss-bottom-icon">ⓘ</span>Диагностика</span>
+          </nav>
+        </div>
+      </div>
+    </section>
+
+    <aside class="gnss-controls" aria-label="Управление дизайн-стендом">
+      <section class="gnss-control-group">
+        <h2 class="gnss-control-title">Внешний вид</h2>
+        <div class="gnss-toolbar">
+          <label>Экран<select data-control="size"><option value="360">360 × 800</option><option value="390" selected>390 × 844</option><option value="430">430 × 932</option></select></label>
+          <label>Акцент<select data-control="palette"><option value="orange">Orange</option><option value="cyan">Cyan</option><option value="red">Red</option></select></label>
+          <label>Шрифт<select data-control="font"><option value="condensed">Condensed</option><option value="technical">Technical</option><option value="wide">Wide</option></select></label>
+          <label>Плотность<select data-control="density"><option value="comfortable">Обычная</option><option value="compact">Компактная</option></select></label>
+          <label>GNSS<select data-control="gnss"><option value="valid">Valid</option><option value="stale">Stale</option><option value="invalid">Invalid</option><option value="unavailable">N/A</option></select></label>
+        </div>
+      </section>
+
+      <section class="gnss-control-group">
+        <h2 class="gnss-control-title">Телеметрия</h2>
+        <div class="gnss-sliders">
+          <label><span class="gnss-slider-head"><span>Скорость</span><span class="gnss-slider-value" data-value="speed">72.4 km/h</span></span><input data-slider="speed" type="range" min="0" max="240" step="0.1" value="72.4"></label>
+          <label><span class="gnss-slider-head"><span>Спутники</span><span class="gnss-slider-value" data-value="satellites">18</span></span><input data-slider="satellites" type="range" min="0" max="32" step="1" value="18"></label>
+          <label><span class="gnss-slider-head"><span>Боковая G</span><span class="gnss-slider-value" data-value="lateral">+0.00 g</span></span><input data-slider="lateral" type="range" min="-1.5" max="1.5" step="0.01" value="0"></label>
+          <label><span class="gnss-slider-head"><span>Продольная G</span><span class="gnss-slider-value" data-value="longitudinal">+0.00 g</span></span><input data-slider="longitudinal" type="range" min="-1.5" max="1.5" step="0.01" value="0"></label>
+        </div>
+        <p class="gnss-hint">Точку в круге можно перетаскивать. Значения выше G-FORCE показываются справа и снизу без подписей осей.</p>
+      </section>
+
+      <section class="gnss-control-group">
+        <h2 class="gnss-control-title">Сценарий</h2>
+        <div class="gnss-scenarios">
+          <button class="gnss-scenario" type="button" data-scenario="idle" aria-pressed="true">Покой</button>
+          <button class="gnss-scenario" type="button" data-scenario="acceleration" aria-pressed="false">Разгон</button>
+          <button class="gnss-scenario" type="button" data-scenario="braking" aria-pressed="false">Торможение</button>
+          <button class="gnss-scenario" type="button" data-scenario="corner" aria-pressed="false">Поворот</button>
+          <button class="gnss-scenario" type="button" data-scenario="maneuver" aria-pressed="false">Манёвр</button>
+          <button class="gnss-scenario" type="button" data-scenario="gnss-loss" aria-pressed="false">Потеря GNSS</button>
+          <button class="gnss-scenario" type="button" data-scenario="stream-gap" aria-pressed="false">Разрыв потока</button>
+        </div>
+      </section>
+      <div aria-live="polite" data-live-status class="gnss-hint">Сценарий: Покой</div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.getElementById('gnss-dashboard-lab');
+  const phone = root.querySelector('.gnss-phone');
+  const canvas = root.querySelector('.gnss-g-canvas');
+  const ctx = canvas.getContext('2d');
+  const panel = root.querySelector('.gnss-g-panel');
+  const speedText = root.querySelector('.gnss-speed-value');
+  const satText = root.querySelector('.gnss-status.sv');
+  const gnssText = root.querySelector('.gnss-status-gnss');
+  const streamText = root.querySelector('.gnss-status.stream');
+  const totalText = root.querySelector('.gnss-g-total');
+  const lateralText = root.querySelector('.gnss-g-lateral');
+  const longitudinalText = root.querySelector('.gnss-g-longitudinal');
+  const gapOverlay = root.querySelector('.gnss-gap-overlay');
+  const recordButton = root.querySelector('.gnss-record');
+  const liveStatus = root.querySelector('[data-live-status]');
+  const sliders = Object.fromEntries([...root.querySelectorAll('[data-slider]')].map(el => [el.dataset.slider, el]));
+  const values = Object.fromEntries([...root.querySelectorAll('[data-value]')].map(el => [el.dataset.value, el]));
+  const state = { speed: 72.4, satellites: 18, lateral: 0, longitudinal: 0, gnss: 'valid', scenario: 'idle', recording: false, gap: false };
+  const trail = [];
+  let startTime = performance.now();
+  let lastTrailAt = 0;
+  let dragging = false;
+
+  const css = name => getComputedStyle(root).getPropertyValue(name).trim();
+  const signed = value => `${value >= 0 ? '+' : ''}${value.toFixed(2)} g`;
+  const scenarioNames = { idle: 'Покой', acceleration: 'Разгон', braking: 'Торможение', corner: 'Поворот', maneuver: 'Манёвр', 'gnss-loss': 'Потеря GNSS', 'stream-gap': 'Разрыв потока' };
+
+  function setGnss(value) {
+    state.gnss = value;
+    const display = { valid: ['GNSS READY', css('--gnss-positive')], stale: ['GNSS STALE', '#ffb45f'], invalid: ['GNSS INVALID', css('--gnss-danger')], unavailable: ['GNSS N/A', css('--gnss-muted')] }[value];
+    gnssText.textContent = display[0];
+    gnssText.style.color = display[1];
+  }
+
+  function syncControls() {
+    sliders.speed.value = state.speed;
+    sliders.satellites.value = state.satellites;
+    sliders.lateral.value = state.lateral;
+    sliders.longitudinal.value = state.longitudinal;
+    values.speed.textContent = `${state.speed.toFixed(1)} km/h`;
+    values.satellites.textContent = String(Math.round(state.satellites));
+    values.lateral.textContent = signed(state.lateral);
+    values.longitudinal.textContent = signed(state.longitudinal);
+  }
+
+  function renderText() {
+    speedText.textContent = state.speed.toFixed(1);
+    satText.textContent = state.gnss === 'unavailable' ? 'SV —' : `SV ${Math.round(state.satellites)}`;
+    lateralText.textContent = signed(state.lateral);
+    longitudinalText.textContent = signed(state.longitudinal);
+    const magnitude = Math.hypot(state.lateral, state.longitudinal);
+    totalText.textContent = `${magnitude.toFixed(2)} g`;
+    totalText.style.color = magnitude > 1 ? css('--gnss-accent') : css('--gnss-text');
+    streamText.textContent = state.gap ? 'РАЗРЫВ' : 'ПОТОК OK';
+    streamText.style.color = state.gap ? css('--gnss-danger') : css('--gnss-secondary');
+    gapOverlay.style.display = state.gap ? 'block' : 'none';
+    syncControls();
+  }
+
+  function canvasGeometry() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const width = Math.max(1, Math.round(rect.width * dpr));
+    const height = Math.max(1, Math.round(rect.height * dpr));
+    if (canvas.width !== width || canvas.height !== height) { canvas.width = width; canvas.height = height; }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const radius = Math.min(rect.width * .37, (rect.height - 66) * .46);
+    return { width: rect.width, height: rect.height, cx: rect.width / 2, cy: 42 + radius, radius };
+  }
+
+  function projectedPoint(g, lateral, longitudinal) {
+    const magnitude = Math.hypot(lateral, longitudinal);
+    const scale = magnitude > 1 ? 1 / magnitude : 1;
+    return { x: g.cx - lateral * scale * g.radius, y: g.cy + longitudinal * scale * g.radius, outside: magnitude > 1 };
+  }
+
+  function draw() {
+    const g = canvasGeometry();
+    ctx.clearRect(0, 0, g.width, g.height);
+    const grid = css('--gnss-muted');
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = grid;
+    ctx.globalAlpha = .62;
+    ctx.lineWidth = 1.7;
+    ctx.beginPath(); ctx.arc(g.cx, g.cy, g.radius, 0, Math.PI * 2); ctx.stroke();
+    ctx.globalAlpha = .25;
+    ctx.setLineDash([5, 6]);
+    ctx.beginPath(); ctx.arc(g.cx, g.cy, g.radius * .5, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = .32;
+    ctx.beginPath(); ctx.moveTo(g.cx - g.radius, g.cy); ctx.lineTo(g.cx + g.radius, g.cy); ctx.moveTo(g.cx, g.cy - g.radius); ctx.lineTo(g.cx, g.cy + g.radius); ctx.stroke();
+    ctx.globalAlpha = .66;
+    [-.5, .5].forEach(f => {
+      ctx.beginPath(); ctx.moveTo(g.cx + g.radius * f, g.cy - 4); ctx.lineTo(g.cx + g.radius * f, g.cy + 4); ctx.moveTo(g.cx - 4, g.cy + g.radius * f); ctx.lineTo(g.cx + 4, g.cy + g.radius * f); ctx.stroke();
+    });
+    if (trail.length > 1) {
+      ctx.strokeStyle = css('--gnss-accent');
+      ctx.lineWidth = 2.4;
+      for (let i = 1; i < trail.length; i++) {
+        const a = projectedPoint(g, trail[i - 1].lateral, trail[i - 1].longitudinal);
+        const b = projectedPoint(g, trail[i].lateral, trail[i].longitudinal);
+        ctx.globalAlpha = .08 + .65 * i / trail.length;
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+    }
+    const p = projectedPoint(g, state.lateral, state.longitudinal);
+    ctx.globalAlpha = .8;
+    ctx.strokeStyle = css('--gnss-secondary');
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(g.cx, g.cy); ctx.lineTo(g.cx, p.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+    const pointColor = p.outside ? css('--gnss-danger') : css('--gnss-positive');
+    ctx.globalAlpha = .14; ctx.fillStyle = pointColor; ctx.beginPath(); ctx.arc(p.x, p.y, 18, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = .30; ctx.beginPath(); ctx.arc(p.x, p.y, 12, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1; ctx.beginPath(); ctx.arc(p.x, p.y, 7, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, Math.PI * 2); ctx.fill();
+    if (p.outside) { ctx.strokeStyle = css('--gnss-accent'); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(p.x, p.y, 14, 0, Math.PI * 2); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+  }
+
+  function setManual(name, value) {
+    state.scenario = 'manual';
+    state[name] = value;
+    state.gap = false;
+    root.querySelectorAll('.gnss-scenario').forEach(button => button.setAttribute('aria-pressed', 'false'));
+    liveStatus.textContent = 'Ручное управление';
+    renderText(); draw();
+  }
+
+  Object.entries(sliders).forEach(([name, input]) => input.addEventListener('input', () => setManual(name, Number(input.value))));
+  root.querySelectorAll('[data-control]').forEach(select => select.addEventListener('change', () => {
+    const key = select.dataset.control;
+    if (key === 'size') phone.dataset.size = select.value;
+    else if (key === 'gnss') setGnss(select.value);
+    else root.dataset[key] = select.value;
+    renderText(); draw();
+  }));
+
+  root.querySelectorAll('.gnss-scenario').forEach(button => button.addEventListener('click', () => {
+    state.scenario = button.dataset.scenario;
+    state.gap = false;
+    startTime = performance.now();
+    trail.length = 0;
+    root.querySelectorAll('.gnss-scenario').forEach(candidate => candidate.setAttribute('aria-pressed', String(candidate === button)));
+    liveStatus.textContent = `Сценарий: ${scenarioNames[state.scenario]}`;
+  }));
+
+  recordButton.addEventListener('click', () => {
+    state.recording = !state.recording;
+    recordButton.dataset.recording = String(state.recording);
+    recordButton.textContent = state.recording ? 'ОСТАНОВИТЬ ЗАПИСЬ' : 'НАЧАТЬ ЗАПИСЬ';
+    liveStatus.textContent = state.recording ? 'Запись начата' : 'Запись остановлена';
+  });
+
+  function updateFromPointer(event) {
+    const rect = canvas.getBoundingClientRect();
+    const g = canvasGeometry();
+    const px = event.clientX - rect.left;
+    const py = event.clientY - rect.top;
+    setManual('lateral', Math.max(-1.5, Math.min(1.5, -(px - g.cx) / g.radius)));
+    state.longitudinal = Math.max(-1.5, Math.min(1.5, (py - g.cy) / g.radius));
+    renderText(); draw();
+  }
+  canvas.addEventListener('pointerdown', event => { dragging = true; canvas.setPointerCapture(event.pointerId); updateFromPointer(event); });
+  canvas.addEventListener('pointermove', event => { if (dragging) updateFromPointer(event); });
+  canvas.addEventListener('pointerup', () => { dragging = false; });
+  canvas.addEventListener('pointercancel', () => { dragging = false; });
+
+  function animate(now) {
+    const t = (now - startTime) / 1000;
+    if (state.scenario !== 'manual') {
+      state.gap = false;
+      if (state.scenario === 'idle') { state.speed = 0; state.satellites = 18; state.lateral = Math.sin(t * 1.7) * .015; state.longitudinal = Math.cos(t * 1.3) * .012; setGnss('valid'); }
+      if (state.scenario === 'acceleration') { const phase = (t % 8) / 8; state.speed = phase * 112; state.satellites = 18; state.lateral = Math.sin(t * 2) * .05; state.longitudinal = -.38 - Math.sin(phase * Math.PI) * .28; setGnss('valid'); }
+      if (state.scenario === 'braking') { const phase = (t % 5) / 5; state.speed = (1 - phase) * 105; state.satellites = 18; state.lateral = Math.sin(t * 3) * .04; state.longitudinal = .55 + Math.sin(phase * Math.PI) * .34; setGnss('valid'); }
+      if (state.scenario === 'corner') { state.speed = 74 + Math.sin(t * .7) * 4; state.satellites = 18; state.lateral = Math.sin(t * .8) * .68; state.longitudinal = -.08 + Math.cos(t * 1.2) * .1; setGnss('valid'); }
+      if (state.scenario === 'maneuver') { state.speed = 96 + Math.sin(t * .45) * 14; state.satellites = 18; state.lateral = Math.sin(t * 1.3) * 1.08; state.longitudinal = Math.cos(t * 1.8) * .82; setGnss('valid'); }
+      if (state.scenario === 'gnss-loss') { state.speed = 87.3; state.lateral = Math.sin(t * .9) * .48; state.longitudinal = Math.cos(t * 1.2) * .22; state.satellites = 0; setGnss('stale'); }
+      if (state.scenario === 'stream-gap') { state.gap = (t % 4) > 1.3; if (!state.gap) { state.speed = 62 + Math.sin(t) * 3; state.satellites = 18; state.lateral = Math.sin(t * 1.4) * .35; state.longitudinal = Math.cos(t) * .18; setGnss('valid'); } }
+      if (!state.gap && now - lastTrailAt > 65) { trail.push({ lateral: state.lateral, longitudinal: state.longitudinal }); if (trail.length > 28) trail.shift(); lastTrailAt = now; }
+      renderText(); draw();
+    }
+    requestAnimationFrame(animate);
+  }
+
+  const visualTokens = { radius: 24, accent: '#ff9f1c', compact: false };
+  function applyVisualTokens() {
+    root.style.setProperty('--gnss-radius', `${visualTokens.radius}px`);
+    root.style.setProperty('--gnss-accent', visualTokens.accent);
+    root.dataset.density = visualTokens.compact ? 'compact' : 'comfortable';
+    draw();
+  }
+  if (globalThis.Tweak) {
+    const tweak = new Tweak({ container: root, onChange: applyVisualTokens });
+    tweak.addSlider(visualTokens, 'radius', { label: 'Радиус панелей', min: 8, max: 32, unit: 'px', reference: '--gnss-radius' });
+    tweak.addColorPicker(visualTokens, 'accent', { label: 'Акцент', reference: '--gnss-accent' });
+    tweak.addToggle(visualTokens, 'compact', { label: 'Компактная плотность', reference: 'density.compact' });
+  }
+
+  new ResizeObserver(draw).observe(panel);
+  setGnss('valid'); renderText(); draw(); requestAnimationFrame(animate);
+})();
+</script>

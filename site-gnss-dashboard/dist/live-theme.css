@@ -1,0 +1,195 @@
+@font-face{font-family:"Golos Text";src:url("./fonts/GolosText.ttf") format("truetype");font-weight:400 900;font-display:swap}
+@font-face{font-family:"Roboto Condensed";src:url("./fonts/RobotoCondensed.ttf") format("truetype");font-weight:100 900;font-display:swap}
+
+/* Scoped cockpit theme. Other routes and the demo panel keep their original theme. */
+body.app-theme{background:#171717}
+.app-theme :is(.screen,.header,#sheet){
+  --bg:#171717;--panel:#222222;--panel-2:#2B2B2B;--line:#393939;
+  --instrument-line:#858580;--text:#F2F0EB;--muted:#AAAAA6;
+  --accent:#FF8A3D;--accent-light:#FFB780;--green:#78C49A;
+  --warning:#E8C470;--red:#F07878;--dial-edge:#191919;
+  font-family:"Golos Text","Segoe UI",sans-serif;color:var(--text)
+}
+.app-theme .screen{background:var(--bg);border-color:var(--line)}
+.app-theme .header .brand{font-weight:500;letter-spacing:.06em}
+.app-theme .header .badge{color:var(--accent);border-color:var(--line)}
+.app-theme .screen :is(button,input,select),.app-theme #sheet :is(button,input,select){
+  background:var(--panel);border-color:var(--line);color:var(--text);font-weight:400;border-radius:10px
+}
+.app-theme :is(.screen,#sheet) button:hover:not(:disabled){background:var(--panel-2);border-color:var(--instrument-line)}
+.app-theme :is(.screen,#sheet) :is(button,input,select):focus-visible{outline:2px solid var(--accent-light);outline-offset:3px}
+.app-theme :is(.screen,#sheet) button.primary{background:var(--accent);color:var(--bg);font-weight:500}
+.app-theme :is(.screen,#sheet) button.primary:hover:not(:disabled){background:var(--accent-light)}
+.app-theme :is(.screen,#sheet) button.danger{color:var(--red)}
+.app-theme #sheet{background:var(--bg);border-color:var(--line)}
+.app-theme #sheet :is(h2,h3,strong){font-weight:500}
+.app-theme .top-choice button{gap:4px}
+.app-theme .status span{color:var(--green)}
+.app-theme .status .bad,.app-theme .bad{color:var(--red)}
+.app-theme .status .warning{color:var(--warning)}
+.app-theme .notice{background:var(--panel);border-color:var(--red);color:var(--text);font-size:.875rem}
+.app-theme .speed-scale .dial-rim{fill:url(#dial-surface);stroke:var(--instrument-line)}
+.app-theme .dial-surface-center{stop-color:var(--panel)}
+.app-theme .dial-surface-edge{stop-color:var(--dial-edge)}
+.app-theme .speed-scale line{stroke:var(--instrument-line)}
+.app-theme .speed-scale .major{stroke:var(--text);stroke-width:1.5}
+.app-theme .speed-scale .medium{stroke-width:1.2}
+.app-theme .speed-scale text{fill:var(--muted);font:500 12px "Roboto Condensed",sans-serif}
+.app-theme .speed-scale .speed-track{fill:none;stroke:var(--line);stroke-width:2}
+.app-theme .speed-scale .speed-arc{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linecap:butt}
+.app-theme .speed-scale .needle-body{fill:var(--accent)}
+.app-theme .speed-scale .needle-tip{fill:var(--accent-light)}
+.app-theme .speed-center{inset:35% 12% 24%}
+.app-theme .speed-center #speed-value{font:500 clamp(2.25rem,5.4vw,2.75rem)/1 "Roboto Condensed",sans-serif;letter-spacing:0;min-width:4.6ch;font-variant-numeric:tabular-nums}
+.app-theme .speed-center small{font-size:.75rem;margin-top:6px;color:var(--muted)}
+.app-theme .g-right,.app-theme .g-bottom{font:500 .875rem "Roboto Condensed",sans-serif;color:var(--text);font-variant-numeric:tabular-nums}
+.app-theme .g-right::before,.app-theme .g-bottom::before{color:var(--muted)}
+.app-theme .gauge-grid.stale :is(.speed-arc,.needle-body,.needle-tip){opacity:.4}
+.app-theme .run-meta{background:var(--panel);border-color:var(--line)}
+.app-theme .run-meta>div+div{border-color:var(--line)}
+.app-theme .run-meta small{font-size:.75rem;color:var(--muted)}
+.app-theme .run-time strong{font:500 1.25rem/1.3 "Roboto Condensed",sans-serif;font-variant-numeric:tabular-nums}
+.app-theme .compact-phase strong{font-size:.875rem;color:var(--text);font-weight:400}
+.app-theme .recording-state i{background:var(--muted);box-shadow:none}
+.app-theme .recording-state.recording i{background:var(--red)}
+.app-theme .events-head>span{font-size:.875rem;font-weight:500}
+.app-theme .auto-layout .event-item{border-color:var(--line)}
+.app-theme .auto-layout .event-item:first-child{border-left:0;padding-left:4px;background:none}
+.app-theme .auto-layout .event-item span{color:var(--text);font-size:.875rem}
+.app-theme .auto-layout .event-item strong{font:500 1.25rem/1.2 "Roboto Condensed",sans-serif;font-variant-numeric:tabular-nums}
+.app-theme .auto-layout .event-item.invalid :is(span,strong){color:var(--red)}
+.app-theme .auto-layout .event-item.event-new{animation:event-arrival 2.4s ease-out both}
+.app-theme .progress{background:var(--line)}
+.app-theme .nav{border-color:var(--line)}
+.app-theme .nav button{background:transparent}
+.app-theme .nav button[aria-current=page]{background:#FF8A3D12;color:var(--accent)}
+.app-theme .primary-actions button{font-size:.875rem}
+@keyframes event-arrival{from{background:#FF8A3D20}to{background:transparent}}
+/* Allow content to grow and scroll instead of clipping when text is enlarged. */
+.app-theme .live-page{min-height:min-content}
+.app-theme .dashboard{min-height:min-content}
+.app-theme .run-meta strong{overflow-wrap:normal}
+.app-theme .primary-actions>button{flex:1 1 8rem;overflow-wrap:anywhere}
+.app-theme .screen.large-text .gauge-grid{grid-template-columns:minmax(0,1fr);gap:3.5rem;margin-bottom:3.5rem}
+.app-theme .screen.large-text .speed-center #speed-value{font-size:2.75rem}
+.app-theme .screen.large-text .top-choice{flex-wrap:wrap}
+.app-theme .screen.large-text .top-choice button{max-width:100%}
+.app-theme .screen.large-text .event-feed{flex:none;max-height:none;overflow:visible}
+@media(prefers-reduced-motion:reduce){.app-theme .auto-layout .event-item.event-new{animation:none}}
+
+/* History, reports, settings and dialogs share the instrument theme. */
+.app-theme{background:#171717}
+.app-theme .header,.app-theme .screen,.app-theme #sheet{font-family:"Golos Text","Segoe UI",sans-serif}
+.app-theme .screen{background:#171717;border-color:#393939}
+.app-theme .panel,.app-theme .record,.app-theme dialog{background:#222222;border-color:#393939;border-radius:10px}
+.app-theme .tabs{padding:3px;background:#222222;border:1px solid #393939;border-radius:10px}
+.app-theme .tabs button{border:0;background:transparent;border-radius:7px;font-weight:400}
+.app-theme .tabs button[aria-selected=true]{background:#FF8A3D18;color:#FF8A3D}
+.app-theme .record{border:1px solid #393939;padding:14px}
+.app-theme .record.invalid{border-color:#F07878}
+.app-theme .record strong,.app-theme .summary-grid strong,.app-theme .cursor-readout{font-family:"Roboto Condensed","Segoe UI",sans-serif;font-weight:500;font-variant-numeric:tabular-nums}
+.app-theme .record-segments{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.app-theme .record-segments span{font-size:.75rem;color:#AAAAA6;background:#2B2B2B;padding:3px 6px;border-radius:5px}
+.app-theme .report-page{padding-bottom:12px}
+.app-theme .report-head h1{font-family:"Golos Text","Segoe UI",sans-serif;font-size:2.25rem;font-weight:500}
+.app-theme .summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:#393939;border:1px solid #393939;border-radius:10px;overflow:hidden}
+.app-theme .summary-grid>div{background:#222222;padding:10px}
+.app-theme .summary-grid small{display:block;font-size:.75rem}
+.app-theme .summary-grid strong{display:block;margin-top:3px;font-size:1.1rem}
+.app-theme .segment-picker{display:flex;gap:6px;flex-wrap:wrap}
+.app-theme .segment-picker button,.app-theme .axis-switch button{min-height:34px;padding:6px 9px;font-size:.8rem}
+.app-theme :is(.segment-picker,.axis-switch) .selected{background:#FF8A3D18;border-color:#FF8A3D;color:#F2F0EB}
+.app-theme .axis-switch{display:flex;align-items:center;gap:6px;font-size:.8rem;color:#AAAAA6}
+.app-theme .report-charts{gap:12px;padding:14px}
+.app-theme .report-chart-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.app-theme .report-chart-head .axis-switch{display:none}
+.app-theme .report-chart-head h2{margin:0;font-size:1rem;font-weight:500}
+.app-theme .chart-legend{display:flex;flex-wrap:wrap;gap:6px}
+.app-theme .chart-legend button,.app-theme .legend-slope{display:inline-flex;align-items:center;gap:5px;min-height:30px;padding:5px 7px;border-radius:7px;font-size:.72rem;color:#F2F0EB}
+.app-theme .chart-legend button[aria-pressed=false]{opacity:.42;text-decoration:line-through}
+.app-theme .chart-legend i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#FF8A3D;flex:none}
+.app-theme .chart-legend .series-longitudinal{background:#6DB7E8}
+.app-theme .chart-legend .series-height{background:#78C49A}
+.app-theme .legend-slope{background:#2B2B2B;color:#AAAAA6}
+.app-theme .legend-slope i{background:#E8C470}
+.app-theme .chart-legend small{font:500 .72rem "Roboto Condensed",sans-serif;color:#AAAAA6}
+.app-theme :is(.performance-chart,.slope-chart){display:block;width:100%;touch-action:none;outline:none;background:#191919;border-radius:7px}
+.app-theme .performance-chart{height:280px}
+.app-theme .slope-chart{height:104px;margin-top:-6px}
+.app-theme .report-page .slope-chart{display:none!important}
+.app-theme .report-page .slope-chart,
+.app-theme .report-page .legend-slope{display:none!important}
+.app-theme .report-page #cursor-slope{display:none}
+.app-theme .report-page #cursor-distance:empty::before{content:'0 м'}
+.app-theme :is(.performance-chart,.slope-chart):focus-visible{outline:2px solid #FFB780;outline-offset:2px}
+.app-theme .slope-chart.is-hidden{display:none}
+.app-theme .slope-unavailable{margin:0;padding:18px 12px;background:#191919;border-radius:7px;color:#AAAAA6;font-size:.875rem}
+.app-theme .chart-cursor{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 10px;font:500 .9rem "Roboto Condensed",sans-serif;font-variant-numeric:tabular-nums;color:#F2F0EB}
+.app-theme .chart-cursor strong{grid-column:1/-1;font:500 1rem "Roboto Condensed",sans-serif}
+.app-theme .chart-cursor span:nth-child(3){color:#FF8A3D}
+.app-theme .chart-cursor span:nth-child(4){color:#6DB7E8}
+.app-theme .chart-cursor span:nth-child(5){color:#78C49A}
+.app-theme .chart-cursor span:nth-child(6){color:#E8C470}
+.app-theme .diagnostics{padding-top:10px}
+.app-theme input[type=range]{accent-color:#FF8A3D}
+.app-theme .device-icon{border-color:#393939;color:#FF8A3D}
+@media(max-width:760px){.app-theme .history-page,.app-theme .report-page{padding-bottom:8px}.app-theme .performance-chart{height:280px}.app-theme .slope-chart{height:100px}.app-theme .report-chart-head{align-items:flex-start;flex-direction:column}.app-theme .segment-picker{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}.app-theme .segment-picker button{white-space:nowrap}.app-theme .summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Live cockpit refinement: retain the established layout while making the
+   measurement screen feel like a focused performance instrument. */
+.app-theme .header{align-items:center;border-bottom:1px solid color-mix(in srgb,var(--line) 72%,transparent);padding-bottom:15px}
+.app-theme .header .brand{color:var(--text);font-family:"Golos Text","Segoe UI",sans-serif;font-size:16px;font-weight:500;letter-spacing:.08em;line-height:1}
+.app-theme .header .badge{border-color:color-mix(in srgb,var(--accent) 54%,var(--line));color:var(--accent-light);font-family:"Golos Text","Segoe UI",sans-serif;font-size:11px;font-weight:500;letter-spacing:.06em;padding:4px 7px}
+.app-theme .screen{background:linear-gradient(180deg,color-mix(in srgb,var(--panel) 18%,transparent),transparent 19%),var(--bg);border-color:color-mix(in srgb,var(--line) 82%,#000);box-shadow:0 16px 42px rgb(0 0 0 / 18%)}
+.app-theme .live-page{gap:14px}
+.app-theme .live-page .dashboard{box-sizing:border-box;margin-inline:0;padding-inline:10px}
+.app-theme .live-page .top-choice{gap:8px;padding-bottom:10px;position:relative}
+.app-theme .live-page .top-choice::after{background:linear-gradient(90deg,transparent,var(--line) 14%,var(--line) 86%,transparent);bottom:0;content:"";height:1px;left:0;position:absolute;right:0}
+.app-theme .live-page .top-choice button{background:linear-gradient(180deg,#262626,#202020);border-color:#40403d;box-shadow:inset 0 1px 0 rgb(255 255 255 / 3%);min-height:62px;padding:9px 11px}
+.app-theme .live-page .top-choice button:hover{background:linear-gradient(180deg,#2d2c29,#242321);border-color:color-mix(in srgb,var(--accent) 42%,var(--line))}
+.app-theme .live-page .top-choice button small{color:var(--muted);font-size:11px;letter-spacing:.025em}
+.app-theme .live-page .top-choice button span{color:var(--text);font-size:15px;font-weight:500}
+.app-theme .live-page .status{align-items:center;gap:8px;letter-spacing:.015em;padding:2px 1px 0}
+.app-theme .live-page .status span{align-items:center;color:var(--muted);display:inline-flex;gap:5px;padding:3px 0}
+.app-theme .live-page .status span::before{background:currentColor;border-radius:50%;content:"";height:5px;opacity:.85;width:5px}
+.app-theme .live-page .status .ok,.app-theme .live-page .status #link-state{color:var(--green)}
+.app-theme .live-page .gauge-grid{gap:14px;margin:16px 0 38px}
+.app-theme .live-page .speed-dial,.app-theme .live-page .g-wrap{background:radial-gradient(circle at 50% 46%,#242424 0,#1e1e1e 56%,#171717 72%);border:1px solid color-mix(in srgb,var(--instrument-line) 68%,#242424);box-shadow:inset 0 0 0 4px rgb(0 0 0 / 14%),inset 0 1px 0 rgb(255 255 255 / 4%)}
+.app-theme .live-page .speed-dial{overflow:hidden}
+.app-theme .live-page .g-wrap{overflow:visible}
+.app-theme .live-page .g-wrap{background:transparent;border:0;box-shadow:none}
+.app-theme .live-page .speed-scale .dial-rim{stroke:color-mix(in srgb,var(--instrument-line) 76%,#3a3a36);stroke-width:1.25}
+.app-theme .live-page .speed-scale .speed-track{opacity:.36;stroke-width:4}
+.app-theme .live-page .speed-scale .speed-arc{filter:drop-shadow(0 0 3px rgb(255 138 61 / 20%));stroke-width:4}
+.app-theme .live-page .speed-scale .tick.major{stroke:var(--text);stroke-width:1.5}
+.app-theme .live-page .speed-scale .tick.medium{stroke:color-mix(in srgb,var(--instrument-line) 88%,var(--text))}
+.app-theme .live-page .speed-scale .tick.minor{stroke:color-mix(in srgb,var(--instrument-line) 76%,#1a1a1a)}
+.app-theme .live-page .speed-scale .needle-body{filter:drop-shadow(0 1px 1px rgb(0 0 0 / 60%))}
+.app-theme .live-page .speed-center{gap:2px}
+.app-theme .live-page .speed-center #speed-value{color:var(--text);font-size:clamp(28px,7.4vw,39px);font-weight:500;letter-spacing:-.045em;text-shadow:0 2px 8px rgb(0 0 0 / 25%)}
+.app-theme .live-page .speed-center .unit{color:var(--muted);font-family:"Roboto Condensed","Arial Narrow",sans-serif;font-size:12px;letter-spacing:.08em}
+.app-theme .live-page .g-canvas{filter:saturate(.95) contrast(1.06)}
+.app-theme .live-page :is(.g-right,.g-bottom){color:var(--muted);font-family:"Roboto Condensed","Arial Narrow",sans-serif;font-size:12px;font-variant-numeric:tabular-nums}
+.app-theme .live-page :is(.g-right,.g-bottom) b{color:var(--accent);font-weight:500}
+.app-theme .live-page .g-label{color:var(--muted);font-size:12px;letter-spacing:.02em}
+.app-theme .live-page .run-meta{background:linear-gradient(120deg,#222220,#1e1e1e);border-color:#40403d;box-shadow:inset 0 1px 0 rgb(255 255 255 / 3%)}
+.app-theme .live-page .run-meta div{min-width:0}
+.app-theme .live-page .run-meta small{color:var(--muted);font-size:11px;letter-spacing:.06em}
+.app-theme .live-page .run-meta strong{color:var(--text);font-family:"Roboto Condensed","Arial Narrow",sans-serif;font-size:18px;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.app-theme .live-page .run-meta #phase{color:var(--text)}
+.app-theme .live-page .events-head{align-items:baseline;margin-top:3px}
+.app-theme .live-page .events-head h2{color:var(--text);font-size:14px;font-weight:500;letter-spacing:.01em}
+.app-theme .live-page .event-feed{border-top-color:color-mix(in srgb,var(--line) 78%,transparent);padding-top:3px}
+.app-theme .live-page .event-feed::after{color:color-mix(in srgb,var(--muted) 82%,transparent);font-size:12px;letter-spacing:.01em}
+.app-theme .live-page .auto-layout .event-item{border-bottom-color:color-mix(in srgb,var(--line) 75%,transparent);padding:9px 2px 9px 10px}
+.app-theme .live-page .auto-layout .event-item:first-child{background:linear-gradient(90deg,rgb(255 138 61 / 8%),transparent 72%)}
+.app-theme .live-page .progress{background:#343430;height:2px;margin-top:1px}
+.app-theme .live-page .progress>div{background:linear-gradient(90deg,var(--accent),var(--accent-light))}
+.app-theme .live-page .primary-actions button.primary{background:linear-gradient(180deg,var(--accent-light),var(--accent));border-color:transparent;box-shadow:0 7px 18px rgb(0 0 0 / 25%),inset 0 1px 0 rgb(255 255 255 / 30%);color:#26170e;font-family:"Golos Text",system-ui,sans-serif;font-size:15px;font-weight:500;min-height:48px}
+.app-theme .live-page .primary-actions button.primary:hover{background:linear-gradient(180deg,#ffc18e,#ff963f);transform:translateY(-1px)}
+.app-theme .live-page .primary-actions button.primary:active{box-shadow:inset 0 2px 5px rgb(64 30 8 / 22%);transform:translateY(0)}
+.app-theme .live-page button:focus-visible,.app-theme .live-page [tabindex]:focus-visible{outline:2px solid var(--accent-light);outline-offset:2px}
+.app-theme .live-page .nav{border-top-color:color-mix(in srgb,var(--line) 78%,transparent);padding-top:9px}
+.app-theme .live-page .nav button{color:var(--muted);font-size:12px;font-weight:500}
+.app-theme .live-page .nav button.active,.app-theme .live-page .nav button[aria-current=page]{background:linear-gradient(180deg,rgb(255 138 61 / 12%),rgb(255 138 61 / 3%));color:var(--accent-light)}
+@media(max-width:430px){.app-theme .header .brand{font-size:15px}.app-theme .live-page .top-choice button span{font-size:14px}.app-theme .live-page .gauge-grid{gap:10px}.app-theme .live-page .speed-center #speed-value{font-size:clamp(27px,8.1vw,37px)}}
